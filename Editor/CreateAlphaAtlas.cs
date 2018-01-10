@@ -32,7 +32,7 @@ public class CreateAlphaAtlas
 
         Dictionary<string, Texture2D> atlasTextures = CreateAlphaAtlasTexture();
 
-        string basePath = Path.Combine(Application.dataPath, AlphaAtlasManager.TEXURE_ALPHA_ATLAS_PATH);
+        string basePath = Path.Combine(Application.dataPath, AlphaAtlasManager.TEXTURE_ALPHA_ATLAS_PATH);
         if (!Directory.Exists(basePath))
             Directory.CreateDirectory(basePath);
 
@@ -44,7 +44,7 @@ public class CreateAlphaAtlas
 
         AlphaAtlasManager atlasConfig = ScriptableObject.CreateInstance<AlphaAtlasManager>();
         atlasConfig.names = new List<string>(atlasTextures.Keys);
-        AssetDatabase.CreateAsset(atlasConfig, Path.Combine("Assets/" + AlphaAtlasManager.TEXURE_ALPHA_ATLAS_PATH, "AlphaAtlasConfig.asset"));
+        AssetDatabase.CreateAsset(atlasConfig, Path.Combine("Assets/" + AlphaAtlasManager.TEXTURE_ALPHA_ATLAS_PATH, "AlphaAtlasConfig.asset"));
         AssetDatabase.Refresh();
     }
 

@@ -7,7 +7,7 @@ using UnityEngine.U2D;
 [Serializable]
 public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceiver
 {
-    public const string TEXURE_ALPHA_ATLAS_PATH = "Resources/TextureAlphaAtlas";
+    public const string TEXTURE_ALPHA_ATLAS_PATH = "Resources/TextureAlphaAtlas";
 
     [SerializeField]
     public List<string> names;
@@ -16,7 +16,7 @@ public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceive
 
     static T LoadAsset<T>(string path) where T : UnityEngine.Object
     {
-        return Resources.Load<T>(Path.Combine(TEXURE_ALPHA_ATLAS_PATH.Substring("Resources/".Length), path));
+        return Resources.Load<T>(Path.Combine(TEXTURE_ALPHA_ATLAS_PATH.Substring("Resources/".Length), path));
     }
 
     static AlphaAtlasManager m_Instance;
