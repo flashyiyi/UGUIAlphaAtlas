@@ -45,6 +45,7 @@ public class CreateAlphaAtlas
         AlphaAtlasManager atlasConfig = ScriptableObject.CreateInstance<AlphaAtlasManager>();
         atlasConfig.names = new List<string>(atlasTextures.Keys);
         AssetDatabase.CreateAsset(atlasConfig, Path.Combine("Assets/" + AlphaAtlasManager.TEXTURE_ALPHA_ATLAS_PATH, "AlphaAtlasConfig.asset"));
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
 
@@ -173,7 +174,8 @@ public class CreateAlphaAtlas
                 SerializedObject so = new SerializedObject(sprite);
                 so.FindProperty("m_RD.textureRect").rectValue = GetAltasTextureRect(sprite, atlasTexture);
                 so.FindProperty("m_RD.texture").objectReferenceValue = atlasTexture;
-                so.FindProperty("m_RD.alphaTexture").objectReferenceValue = AlphaAtlasManager.GetInstance().GetAlphaTexture(atlasTexture.name);
+                Texture2D alphaTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/" + AlphaAtlasManager.TEXTURE_ALPHA_ATLAS_PATH + atlasTexture.name + "_alpha.png");
+                so.FindProperty("m_RD.alphaTexture").objectReferenceValue = alphaTexture;
                 so.ApplyModifiedProperties();
 
                 sos.Add(so);
@@ -192,7 +194,6 @@ public class CreateAlphaAtlas
             so.FindProperty("m_RD.alphaTexture").objectReferenceValue = null;
             so.ApplyModifiedProperties();
         }
-
         AssetDatabase.Refresh();
     }
 

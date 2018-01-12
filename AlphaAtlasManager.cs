@@ -7,16 +7,34 @@ using UnityEngine.U2D;
 [Serializable]
 public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceiver
 {
-    public const string TEXTURE_ALPHA_ATLAS_PATH = "Resources/TextureAlphaAtlas";
+    public const string TEXTURE_ALPHA_ATLAS_PATH = "Resources/TextureAlphaAtlas/";
 
     [SerializeField]
     public List<string> names;
 
-    private Dictionary<string, WeakReference> nameDict = new Dictionary<string, WeakReference>();
+    private Dictionary<string, WeakReference> nameDict;
 
-    static T LoadAsset<T>(string path) where T : UnityEngine.Object
+    static T LoadAsset<T>(string name) where T : UnityEngine.Object
     {
-        return Resources.Load<T>(Path.Combine(TEXTURE_ALPHA_ATLAS_PATH.Substring("Resources/".Length), path));
+        string path = TEXTURE_ALPHA_ATLAS_PATH + name;
+        if (path.StartsWith("Resources/"))
+        {
+            return Resources.Load<T>(path.Substring("Resources/".Length));
+        }
+        else
+        {
+#if UNITY_EDITOR
+            if (name == "AlphaAtlasConfig")
+                path = path + ".asset";
+            else
+                path = path + ".png";
+
+            return UnityEditor.AssetDatabase.LoadAssetAtPath<T>("Assets/" + path);
+#else
+            Debug.LogError("加载不在Resources下的文件需要自行添加加载逻辑");
+            return null;
+#endif
+        }
     }
 
     static AlphaAtlasManager m_Instance;
@@ -30,6 +48,7 @@ public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceive
                 Debug.Log("AlphaAtlasConfig.asset No Find!");
                 m_Instance = ScriptableObject.CreateInstance<AlphaAtlasManager>();
             }
+            m_Instance.OnAfterDeserialize();
         }
         return m_Instance;
     }
@@ -40,10 +59,16 @@ public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceive
 
     public void OnAfterDeserialize()
     {
+        if (nameDict != null)
+            return;
+
         nameDict = new Dictionary<string, WeakReference>();
-        foreach (string name in names)
+        if (names != null)
         {
-            nameDict.Add(name, new WeakReference(null));
+            foreach (string name in names)
+            {
+                nameDict.Add(name, new WeakReference(null));
+            }
         }
     }
 
@@ -62,5 +87,17 @@ public class AlphaAtlasManager : ScriptableObject, ISerializationCallbackReceive
     public Texture2D GetAlphaTexture(Sprite sprite)
     {
         return GetAlphaTexture(sprite.texture.name);
+    }
+
+    public void UnLoadAllTexture()
+    {
+        foreach (var pair in nameDict)
+        {
+            if (pair.Value.Target != null)
+            {
+                Resources.UnloadAsset(pair.Value.Target as Texture);
+                pair.Value.Target = null;
+            }
+        }
     }
 }
