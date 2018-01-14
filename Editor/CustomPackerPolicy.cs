@@ -149,9 +149,12 @@ public class CustomPackerPolicy : IPackerPolicy
 
     protected bool HasPlatformEnabledAlphaSplittingForCompression(TextureImporter ti)
     {
-        //return ti.GetAllowsAlphaSplitting(); //API不存在替换成此注释
+#if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2 || UNITY_5_3 || UNITY_5_4
+        return ti.GetAllowsAlphaSplitting(); 
+#else
         TextureImporterPlatformSettings platformTextureSettings = ti.GetPlatformTextureSettings("Android");
         return platformTextureSettings.overridden && platformTextureSettings.allowsAlphaSplitting;
+#endif
     }
 
     protected bool IsTagPrefixed(string packingTag)
