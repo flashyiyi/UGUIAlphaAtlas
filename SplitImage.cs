@@ -38,6 +38,6 @@ namespace UnityEngine.UI
                 canvasRenderer.SetAlphaTexture(alphaTex);
             }
         }
-    }
 #endif
+    }
 }
