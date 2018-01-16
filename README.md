@@ -11,4 +11,4 @@
 简介：<https://zhuanlan.zhihu.com/p/32674470>
 
 
-看Unity2018版本介绍，Unity似乎要支持IOS使用ETC2纹理了，这个方案估计要凉凉。
+`看Unity2018版本介绍，Unity似乎要支持IOS使用ETC2纹理了，这个方案估计要凉凉。`
